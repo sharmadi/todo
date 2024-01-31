@@ -1,0 +1,127 @@
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="index.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body onload="addTask()">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="container text-center">
+            <h3>Create Your Task</h3>
+            <!-- <form id = "taskForm" name = "taskForm" method="post" onsubmit="return addTask()" required> -->
+                <div class="add-task">
+                    <input type="text" name= "addTask" id="enterTask" onfocus="this.value=''" class="form-control rounded" placeholder="Add Task" aria-label="Add Task" aria-describedby="search-addon" required>
+                    <select class="form-select" aria-label="Default select example" placeholder="Choose category" id="selectCategory" onfocus="this.value=''" value="Choose your category" required>
+                        <option style="display: none;" value="" selected>Choose a category</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option> 
+                        <option value="School">School</option>
+                    </select>
+                    <label for="date">Due Date</label>
+                    <input type="date" id="date" name="date" onfocus="this.value=''" value="date" placeholder="Enter Due Date">    
+                </div>
+            <button type="submit" class="btn btn-success" id="btnsubmit" onclick="addTask()" value="Submit" title="Add Task">Add Task</button>
+            <br>
+            <!-- </form> -->
+        </div>
+    </div>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+    <h3 id = "tasksTitle">Upcoming Tasks</h3>
+    <div id="taskDisplay">
+    </div>
+    <script>
+        let arrayTask;
+        if(JSON.parse(localStorage.getItem("arrayTask"))){
+            arrayTask = JSON.parse(localStorage.getItem("arrayTask"));
+        }
+        else{
+            arrayTask = [];
+        }
+        function addTask(){
+            // var form = document.forms["taskForm"]["addTask"].value;
+            // if (form == "" || form == null) {
+            //     alert("Invalid Input Please try again");
+            //     return false;
+            // }
+            
+            const objectTask = {
+                "task_name": document.getElementById("enterTask").value,
+                "date": document.getElementById("date").value,
+                "category": document.getElementById("selectCategory").value
+            }
+            if(objectTask.task_name != ""){       
+                arrayTask.push(objectTask);
+            }
+            //save the data
+            localStorage.setItem("arrayTask", JSON.stringify(arrayTask));
+            var savedTask = JSON.parse(localStorage.getItem("arrayTask"));
+
+            //remove div task before appending
+            const divTask = document.getElementById("taskDisplay");
+            divTask.textContent = '';
+            
+            //logic for displaying it in the UI
+            for(let key in arrayTask){
+                //create div elements
+                console.log(arrayTask);
+                var task = document.createElement("div");
+                task.className = "card card-body card-style";
+                task.id = Math.random().toString(16).slice(2)
+                var category = document.createElement("span");
+                var date = document.createElement("span");
+                //create cancel button
+                var cancelTask = document.createElement("i");
+                cancelTask.className = "fa fa-close";
+                cancelTask.title="Cancel Task";
+                let cancelTaskId = task.id;
+                var taskItem = JSON.parse(localStorage.getItem("arrayTask")); 
+                cancelTask.onclick = function(){
+
+                    //remove from local storage
+                    if(typeof taskItem === 'string'){
+                        taskItem = JSON.parse(taskItem);
+                    }
+                    taskItem.splice(key, 1);
+                    taskItem = JSON.stringify(taskItem);
+                    localStorage.setItem("arrayTask", taskItem);
+
+                    //remove from array 
+                    arrayTask.splice(key, 1);
+                    console.log(arrayTask);
+
+                    //remove it from div element    
+                    let arrayId = [];
+                    arrayId.push(cancelTaskId);
+                    let deleteTask = document.getElementById(cancelTaskId);
+                    deleteTask.remove();
+                };
+                //populate card-body
+                let createTask = "Task: " + arrayTask[key].task_name;
+                let chooseCategory = arrayTask[key].category;
+                let dateAdded = arrayTask[key].date;
+                category.innerText = "Category: " + chooseCategory;
+                date.innerText = "Due: " + dateAdded;
+                task.append(cancelTask);
+                task.append(createTask);
+                task.append(category);
+                task.append(date);
+                if(createTask != "Task: "){
+                    taskDisplay.appendChild(task); 
+                }            
+            }
+        }
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "25%";
+        }
+    </script>
+</body>
+</html>

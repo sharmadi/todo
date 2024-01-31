@@ -1,0 +1,110 @@
+h3{
+    text-align: center;
+    font-weight: bolder;
+    font-style: arial;
+    margin-top: 13%;
+    margin-bottom: 5%;
+}
+.add-task{
+    text-align: center;
+    position:relative;
+    margin: 0 auto;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+.card-style{
+    text-align: left;
+    font-style: arial;
+    margin-bottom: 1%;
+    margin-left: 42.5%;
+    width: 14%;
+}
+.card-style :hover{
+    border: 1px solid #888;
+    background-color: #ddd;
+}
+.close-icon{
+    margin-left: 95%;
+}
+.close-icon :hover{
+    border: 1px solid #888;
+    background-color: black
+}
+#taskDisplay{
+    margin-top: 2%;
+    margin-left: 1%;
+}
+.form-select{
+    margin-top: 5%;
+}
+button{
+    margin-top: 7%;
+}
+#date{
+    margin-top: 5%;
+}
+.fa-close{
+    margin-left: 90%;
+}
+
+.sidenav {
+    height: 100%;
+    width: 25%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    -moz-box-shadow: -3px 0 5px 0 #555;
+    -webkit-box-shadow: -3px 0 5px 0 #555;
+    box-shadow: -3px 0 5px 0 #282727;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+span{
+    margin-top: 5%;
+ }
+ p{
+    margin-left: 60%
+ }
+ .error{
+    margin-left: 5%;
+ }
+ #tasksTitle{
+    margin-top: 1.2%;
+ }
+ #errorMessage{
+    margin-top: 9%;
+    margin-right: 10%;
+    /* margin-left: 1%; */
+    color: #D8000C;
+ }
