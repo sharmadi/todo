@@ -7,14 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
-<body onload="addTask()">
+<body onload="getTask()">
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <div class="container text-center">
             <h3>Create Your Task</h3>
-            <!-- <form id = "taskForm" name = "taskForm" method="post" onsubmit="return addTask()" required> -->
+            <!-- <form id = "taskForm" name = "taskForm" method="post" onsubmit="return addTask()" required> --> 
                 <div class="add-task">
                     <input type="text" name= "addTask" id="enterTask" onfocus="this.value=''" class="form-control rounded" placeholder="Add Task" aria-label="Add Task" aria-describedby="search-addon" required>
                     <select class="form-select" aria-label="Default select example" placeholder="Choose category" id="selectCategory" onfocus="this.value=''" value="Choose your category" required>
@@ -36,85 +35,97 @@
     <div id="taskDisplay">
     </div>
     <script>
-        let arrayTask;
-        if(JSON.parse(localStorage.getItem("arrayTask"))){
-            arrayTask = JSON.parse(localStorage.getItem("arrayTask"));
-        }
-        else{
-            arrayTask = [];
-        }
-        function addTask(){
-            // var form = document.forms["taskForm"]["addTask"].value;
-            // if (form == "" || form == null) {
-            //     alert("Invalid Input Please try again");
-            //     return false;
-            // }
-            
+
+        let taskId;
+        var task;
+
+        //add task 
+        function addTask(){        
             const objectTask = {
                 "task_name": document.getElementById("enterTask").value,
                 "date": document.getElementById("date").value,
-                "category": document.getElementById("selectCategory").value
+                "category": document.getElementById("selectCategory").value,
+                "id": Math.random().toString(16).slice(2)
             }
-            if(objectTask.task_name != ""){       
-                arrayTask.push(objectTask);
-            }
-            //save the data
-            localStorage.setItem("arrayTask", JSON.stringify(arrayTask));
-            var savedTask = JSON.parse(localStorage.getItem("arrayTask"));
 
+            //send the data to server
+            if(objectTask.task_name != ""){
+                fetch('http://localhost:3000/createTask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({objectTask: objectTask})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response: ", data);
+                    getTask();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+        //retrieve the tasks
+        function getTask(){
             //remove div task before appending
             const divTask = document.getElementById("taskDisplay");
             divTask.textContent = '';
-            
-            //logic for displaying it in the UI
-            for(let key in arrayTask){
-                //create div elements
-                console.log(arrayTask);
-                var task = document.createElement("div");
-                task.className = "card card-body card-style";
-                task.id = Math.random().toString(16).slice(2)
-                var category = document.createElement("span");
-                var date = document.createElement("span");
-                //create cancel button
-                var cancelTask = document.createElement("i");
-                cancelTask.className = "fa fa-close";
-                cancelTask.title="Cancel Task";
-                let cancelTaskId = task.id;
-                var taskItem = JSON.parse(localStorage.getItem("arrayTask")); 
-                cancelTask.onclick = function(){
-
-                    //remove from local storage
-                    if(typeof taskItem === 'string'){
-                        taskItem = JSON.parse(taskItem);
+            //retrieve data from server
+            fetch('http://localhost:3000/getTasks')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("get data ...", data);
+                    for(const key in data){
+                        console.log(data[key]);
+                        //create div elements
+                        task = document.createElement("div");
+                        task.className = "card card-body card-style";
+                        task.id = data[key].id;
+                        var category = document.createElement("span");
+                        var date = document.createElement("span");
+                        //create cancel button
+                        var cancelTask = document.createElement("i");
+                        cancelTask.className = "fa fa-close";
+                        cancelTask.title="Cancel Task";
+                        cancelTask.onclick = function () {removeTask(data[key].id)};
+                        //populate card-body
+                        let createTask = "Task: " + data[key].task_name;
+                        let chooseCategory = data[key].category;
+                        let dateAdded = data[key].date;
+                        category.innerText = "Category: " + chooseCategory;
+                        date.innerText = "Due: " + dateAdded;
+                        task.append(cancelTask);
+                        task.append(createTask);
+                        task.append(category);
+                        task.append(date);
+                        if(createTask != "Task: "){
+                            taskDisplay.appendChild(task); 
+                        }  
                     }
-                    taskItem.splice(key, 1);
-                    taskItem = JSON.stringify(taskItem);
-                    localStorage.setItem("arrayTask", taskItem);
-
-                    //remove from array 
-                    arrayTask.splice(key, 1);
-                    console.log(arrayTask);
-
-                    //remove it from div element    
-                    let arrayId = [];
-                    arrayId.push(cancelTaskId);
-                    let deleteTask = document.getElementById(cancelTaskId);
-                    deleteTask.remove();
-                };
-                //populate card-body
-                let createTask = "Task: " + arrayTask[key].task_name;
-                let chooseCategory = arrayTask[key].category;
-                let dateAdded = arrayTask[key].date;
-                category.innerText = "Category: " + chooseCategory;
-                date.innerText = "Due: " + dateAdded;
-                task.append(cancelTask);
-                task.append(createTask);
-                task.append(category);
-                task.append(date);
-                if(createTask != "Task: "){
-                    taskDisplay.appendChild(task); 
-                }            
-            }
+                })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+        //remove task 
+        function removeTask(taskId){ 
+            console.log("deleting", taskId);
+            //remove data from server
+            fetch(`http://localhost:3000/removeTasks`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id: taskId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                console.log("Response: ", data);
+                getTask()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
