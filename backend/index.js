@@ -7,89 +7,71 @@ var cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
 
-let myObject = [];
-
+let updatedData = [];
 const fs = require('fs');
 
 app.post('/createTask', (req, res) => {
     const task = req.body.objectTask; // assuming objectTask is a valid JSON object
-
-    // Read the existing data from file
-    fs.readFile('./data.json', (err, data) => {
-
-        if (err) {
-            // If there's an error reading the file (e.g., file doesn't exist), start with an empty array
-            myObject = [];
-        } else {
-            // If the file is empty, initialize as an empty array
-            const fileContent = data.toString().trim();
-            myObject = fileContent ? JSON.parse(fileContent) : [];
-        }
-
-        // Push the new task to the array
-        myObject.push(task);
-        console.log("create task", myObject);
-
-        // Convert the array back to JSON
-        let newData = JSON.stringify(myObject, null, 2); // null, 2 for pretty-printing
-
-        // Write the updated array back to the file
-        fs.writeFile('./data.json', newData, (writeErr) => {
-            if (writeErr) {
-                console.error(writeErr);
-                res.status(500).json({ error: 'Error writing file' });
-                return;
-            }
-            res.json({ message: "task added to the server" });
-        });
-    });
+    // Push the new task to the array
+    updatedData.push(task);
+    res.json({message: "task successfully added"});
 });
 
 app.get('/getTasks', (req, res) => {
-    // Read the existing data from file
-    fs.readFile('./data.json', 'utf-8', (err, data) => {
-        
-        if (err) {
-            res.status(500).json({ error: 'Error reading file' });
-            return;
-        } else {
-            const updatedData = JSON.parse(data);
-            res.json(updatedData);
-        }
-    });
-});
+    // Get the existing tasks
+    res.json(updatedData);
+})
 
 app.delete('/removeTasks', (req, res) => {
-
-    fs.readFile('./data.json', (err, data) => {
-        if (err) {
-            // If there's an error reading the file (e.g., file doesn't exist), start with an empty array
-            console.log("error");
-        }
-        const cancelTaskId = req.body.id;
-        myObject = myObject.filter((task) => task.id !== cancelTaskId)
-
-        // Convert the array back to JSON
-        let newData = JSON.stringify(myObject, null, 2); // null, 2 for pretty-printing
-
-        // Write the updated array back to the file
-        fs.writeFile('./data.json', newData, (writeErr) => {
-            if (writeErr) {
-                console.error(writeErr);
-                res.status(500).json({ error: 'Error writing file' });
-                return;
-            }
-            res.json({ message: "task removed from the server" });
-        });
-    });
+    //remove task from the array
+    const cancelTaskId = req.body.id;
+    updatedData = updatedData.filter((task) => task.id !== cancelTaskId);
+    res.json({message: "task successfully removed"});
 });
 
-process.on('SIGTERM', () => {
-    console.log("closed");
+//server starts
+const server = app.listen(port, () => {
+    console.log(`Server has started on port ${port}`);
+    console.log('reading the file data....');
+
+    //read the file
+    fs.readFile('./data.json', 'utf8', (err, data) => {
+        updatedData = JSON.parse(data);
+        if (err) {
+            // If there's an error reading the file (e.g., file doesn't exist), start with an empty array
+            updatedData = [];
+        } 
+        else if (data.length === 0) {
+            // If the file is empty, initialize as an empty array
+            const fileContent = data.toString().trim();
+            updatedData = fileContent ? JSON.parse(fileContent) : [];
+        }
+        else {
+            console.log("data: ", updatedData);
+        }
+    })
 })
+
+//server ends 
 process.on('SIGINT', () => {
-    console.log("closed");
-})
-app.listen(port, () => {
-  console.log(`Server has started on port ${port}`)
-})
+    console.log('Ctrl+C was pressed. Writting any updated data to the file before exiting....');
+
+    // Convert the array back to JSON
+    updatedData = JSON.stringify(updatedData, null, 2); // null, 2 for pretty-printing
+
+    // Write the updated array back to the file
+    fs.writeFile('./data.json', updatedData, (writeErr) => {
+        if (writeErr) {
+            console.error(writeErr);
+            res.status(500).json({ error: 'Error writing file' });
+            return;
+        }
+        else{
+            console.log("Successfully written to the file. Now closing the server");
+        }
+    });
+    server.close();
+});
+
+
+
