@@ -71,7 +71,7 @@
             const divTask = document.getElementById("taskDisplay");
             divTask.textContent = '';
             //retrieve data from server
-            fetch('https://159.65.47.59:3000/getTasks')
+            fetch('http://159.65.47.59:3000/getTasks')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get data ...", data);
@@ -105,7 +105,7 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
 
-            fetch('https://159.65.47.59:3000/getLoginInfo')
+            fetch('http://159.65.47.59:3000/getLoginInfo')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get loginInfo ...", data);
@@ -119,7 +119,7 @@
         function removeTask(taskId){ 
             console.log("deleting", taskId);
             //remove data from server
-            fetch('https://159.65.47.59:3000/removeTasks', {
+            fetch('http://159.65.47.59:3000/removeTasks', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
