@@ -10,11 +10,20 @@ app.use(cors());
 let updatedData = [];
 const fs = require('fs');
 
-app.post('/login', (req,res) => {
-    const info = req.body.object;
-    res.json({message: "logged in successfully"});
-})
+var username = '';
+var password = '';
 
+app.post('/login', (req,res) => {
+    username = req.body.username;
+    password = req.body.password;
+    console.log(username);
+    console.log(password);
+    res.json({message: "got the username and password"});
+});
+
+app.get('/getLoginInfo', (req, res) => {
+    res.json({username: username, password: password});
+})
 app.post('/createTask', (req, res) => {
     const task = req.body.objectTask; // assuming objectTask is a valid JSON object
     // Push the new task to the array

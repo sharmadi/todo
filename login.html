@@ -21,21 +21,20 @@
     </form>
     <script>
         function myFunction(){
-            const object = {
-                "username": document.getElementById("form2Example1").value,
-                "password": document.getElementById("form2Example2").value
-            }
+            //get input values
+            var username = document.getElementById("form2Example1").value;
+            var password = document.getElementById("form2Example2").value;
             fetch('http://159.65.47.59:3000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({object: object})
+                body: JSON.stringify({username: username, password: password})
             })
             .then(response => response.json())
             .then(data => {
                 console.log("Response: ", data);
-                location.replace("index.html")
+                window.location.href = "index.html";
             })
             .catch(error => {
                 console.error('Error:', error);

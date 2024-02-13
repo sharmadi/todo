@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <meta http-equiv="refresh" content="0; url = login.html" />
 </head>
 <body onload="getTask()">
     <div id="mySidenav" class="sidenav">
@@ -18,7 +17,7 @@
                 <div class="add-task">
                     <input type="text" name= "addTask" id="enterTask" onfocus="this.value=''" class="form-control rounded" placeholder="Add Task" aria-label="Add Task" aria-describedby="search-addon" required>
                     <select class="form-select" aria-label="Default select example" placeholder="Choose category" id="selectCategory" onfocus="this.value=''" value="Choose your category" required>
-                        <option style="display: none;" value="" selected>Choose a category</option>
+                        <option style="display: none;" value="" selected>Choose a category</option>     
                         <option value="Personal">Personal</option>
                         <option value="Work">Work</option> 
                         <option value="School">School</option>
@@ -36,6 +35,7 @@
     <div id="taskDisplay">
     </div>
     <script>
+        console.log("hello");
         let taskId;
         var task;
         //add task 
@@ -46,7 +46,6 @@
                 "category": document.getElementById("selectCategory").value,
                 "id": Math.random().toString(16).slice(2)
             }
-
             //send the data to server
             if(objectTask.task_name != ""){
                 fetch('http://159.65.47.59:3000/createTask', {
@@ -104,8 +103,18 @@
                         }  
                     }
                 })
-            .catch(error => console.error('Error fetching data:', error));
-        }
+                .catch(error => console.error('Error fetching data:', error));
+
+            fetch('http://159.65.47.59:3000/getLoginInfo')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("get loginInfo ...", data);
+                    if(data.username != '123' && data.password != '123'){
+                        window.location.href = "login.html";
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+            }
         //remove task 
         function removeTask(taskId){ 
             console.log("deleting", taskId);
