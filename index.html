@@ -109,7 +109,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log("get loginInfo ...", data);
-                    if(data.username != '123' && data.password != '123'){
+                    if(JSON.stringify(data) == '{}'){
                         window.location.href = "login.html";
                     }
                 })

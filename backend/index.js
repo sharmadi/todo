@@ -10,20 +10,23 @@ app.use(cors());
 let updatedData = [];
 const fs = require('fs');
 
-var username = '';
-var password = '';
+var myUsername = '123';
+var myPassword = '123';
+var username;
+var password;
 
 app.post('/login', (req,res) => {
     username = req.body.username;
-    password = req.body.password;
-    console.log(username);
-    console.log(password);
-    res.json({message: "got the username and password"});
+    password = req.body.password; 
+    if(username == myUsername && password == myPassword){
+        res.json({message: "got the correct username and password"});
+    }
 });
 
 app.get('/getLoginInfo', (req, res) => {
     res.json({username: username, password: password});
-})
+});
+
 app.post('/createTask', (req, res) => {
     const task = req.body.objectTask; // assuming objectTask is a valid JSON object
     // Push the new task to the array
