@@ -1,8 +1,9 @@
 const express = require('express')
+const path = require("path");
 const app = express()
 const bodyParser = require('body-parser');
 const port = 3000
-const path = require('path');
+const https = require("https");
 var cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
@@ -46,8 +47,16 @@ app.delete('/removeTasks', (req, res) => {
     res.json({message: "task successfully removed"});
 });
 
+// Read SSL certificate and key files
+const options = {
+    key: fs.readFileSync(path.join(__dirname, "server-key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "server.pem")),
+};
+
+const server = https.createServer(options, app);
+
 //server starts
-const server = app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server has started on port ${port}`);
     console.log('reading the file data....');
 

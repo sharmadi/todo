@@ -35,7 +35,6 @@
     <div id="taskDisplay">
     </div>
     <script>
-        console.log("hello");
         let taskId;
         var task;
         //add task 
@@ -48,7 +47,7 @@
             }
             //send the data to server
             if(objectTask.task_name != ""){
-                fetch('http://159.89.247.154:3000/createTask', {
+                fetch('https://159.89.247.154:3000/createTask', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -71,7 +70,7 @@
             const divTask = document.getElementById("taskDisplay");
             divTask.textContent = '';
             //retrieve data from server
-            fetch('http://159.89.247.154:3000/getTasks')
+            fetch('https://159.89.247.154:3000/getTasks')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get data ...", data);
@@ -105,7 +104,7 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
 
-            fetch('http://159.89.247.154:3000/getLoginInfo')
+            fetch('https://159.89.247.154:3000/getLoginInfo')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get loginInfo ...", data);
@@ -119,7 +118,7 @@
         function removeTask(taskId){ 
             console.log("deleting", taskId);
             //remove data from server
-            fetch('http://159.89.247.154:3000/removeTasks', {
+            fetch('https://159.89.247.154:3000/removeTasks', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
