@@ -3,11 +3,10 @@ const path = require("path");
 const app = express()
 const bodyParser = require('body-parser');
 const port = 3000
-const https = require("https");
+const http = require("http");
 var cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
-
 let updatedData = [];
 const fs = require('fs');
 
@@ -48,12 +47,12 @@ app.delete('/removeTasks', (req, res) => {
 });
 
 // Read SSL certificate and key files
-const options = {
-    key: fs.readFileSync(path.join(__dirname, "server-key.pem")),
-    cert: fs.readFileSync(path.join(__dirname, "server.pem")),
-};
+// const options = {
+//     key: fs.readFileSync(path.join(__dirname, "server-key.pem")),
+//     cert: fs.readFileSync(path.join(__dirname, "server.pem")),
+// };
 
-const server = https.createServer(options, app);
+const server = http.createServer(app);
 
 //server starts
 server.listen(port, () => {
@@ -76,8 +75,9 @@ server.listen(port, () => {
             console.log("data: ", updatedData);
         }
     })
+}).on('error', function(err){
+    console.error(err);
 })
-
 //server ends 
 process.on('SIGINT', () => {
     console.log('Ctrl+C was pressed. Writting any updated data to the file before exiting....');
