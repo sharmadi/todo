@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.use(cors());
 let userData = []
 let updatedData = [];
+let loginInfo;
 const fs = require('fs');
 
 app.post('/createUser', (req,res) => {
@@ -18,8 +19,8 @@ app.post('/createUser', (req,res) => {
 })
 
 app.post('/login', (req,res) => {
-    const loginInfo = req.body.loginInfo;
-    console.log(loginInfo);
+    loginInfo = req.body.loginInfo;
+    console.log("loginInfo:", loginInfo);
     var email = loginInfo.email;
     var password = loginInfo.password;
     //traverse through userData array
@@ -32,6 +33,14 @@ app.post('/login', (req,res) => {
     }
 });
 
+app.get('/getUserInfo', (req,res) => {
+    res.json(userData);
+});
+
+app.get('/getLoginInfo', (req,res) => {
+    res.json({loginInfo});
+});
+
 app.post('/createTask', (req, res) => {
     const task = req.body.objectTask; // assuming objectTask is a valid JSON object
     // Push the new task to the array
@@ -41,7 +50,6 @@ app.post('/createTask', (req, res) => {
 
 app.get('/getTasks', (req, res) => {
     // Get the existing tasks
-    console.log("hello");
     res.json(updatedData);
 })
 
