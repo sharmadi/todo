@@ -5,51 +5,45 @@
     <link href="login.css" rel="stylesheet">
 </head>
 <body>
-    <form action="file:///Users/adi/Developer/projects/todo/index.html" method="post">
-        <div class="container">
-            <h3>Login</h3>
+    <form>
+        <div class = "container">
+            <h3>Sign Up</h3>
             <div class="form-outline mb-4">
-                <label class="form-label" for="form2Example1">Email: </label>
+                <label for="exampleInputEmail1">Enter Email: </label>
                 <input type="email" id="email" class="form-control" />
             </div>
             <div class="form-outline mb-4">
-                <label class="form-label" for="form2Example2">Password: </label>
+                <label for="exampleInputPassword1">Enter Password: </label>
                 <input type="password" id="password" class="form-control" />
             </div>
-        <button type="button" class="btn btn-success btn-block mb-4" onclick="login()">Sign In</button>
+            <button type="button" class="btn btn-success btn-block mb-4" onclick="addUser()">Sign Up</button>
         </div>
-        <button type="button" class="btn btn-success btn-block mb-4" onclick="signUp()">Sign Up</button>
     </form>
 
     <script>
-        function login(){
-            const loginInfo = {
+        function addUser(){
+            const objectUser = {
                 "email": document.getElementById("email").value,
-                "password": document.getElementById("password").value
+                "password": document.getElementById("password").value,
+                "id": Math.random().toString(16).slice(2)
             }
-            if(loginInfo != ""){
-                fetch('http://localhost:3000/login', {
+            if(objectUser != ""){
+                fetch('http://localhost:3000/createUser', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({loginInfo: loginInfo})
+                    body: JSON.stringify({objectUser: objectUser})
                 })
                 .then(response => response.json())
                 .then(data => {
                     console.log("Response: ", data);
-                    if(JSON.stringify(data) != '{}'){
-                        window.location.href = "index.html";
-                    }
+                    window.location.href = "login.html";
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
             }
-        }
-
-        function signUp(){
-            window.location.href = "signUp.html";
         }
     </script>
 </body>

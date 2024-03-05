@@ -7,24 +7,29 @@ const http = require("http");
 var cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
+let userData = []
 let updatedData = [];
 const fs = require('fs');
 
-var myUsername = '123';
-var myPassword = '123';
-var username;
-var password;
+app.post('/createUser', (req,res) => {
+    const userInfo = req.body.objectUser;
+    userData.push(userInfo);
+    res.json({message: "user successfully created"});
+})
 
 app.post('/login', (req,res) => {
-    username = req.body.username;
-    password = req.body.password; 
-    if(username == myUsername && password == myPassword){
-        res.json({message: "got the correct username and password"});
+    const loginInfo = req.body.loginInfo;
+    console.log(loginInfo);
+    var email = loginInfo.email;
+    var password = loginInfo.password;
+    //traverse through userData array
+    for(const key in userData){
+        let userEmail = userData[key].email;
+        let userPassword = userData[key].password; 
+        if(userEmail == email && password == userPassword){
+            res.json({message:"successful login", email: email, password: password});
+        }
     }
-});
-
-app.get('/getLoginInfo', (req, res) => {
-    res.json({username: username, password: password});
 });
 
 app.post('/createTask', (req, res) => {
@@ -36,6 +41,7 @@ app.post('/createTask', (req, res) => {
 
 app.get('/getTasks', (req, res) => {
     // Get the existing tasks
+    console.log("hello");
     res.json(updatedData);
 })
 
@@ -46,12 +52,6 @@ app.delete('/removeTasks', (req, res) => {
     res.json({message: "task successfully removed"});
 });
 
-// Read SSL certificate and key files
-// const options = {
-//     key: fs.readFileSync(path.join(__dirname, "server-key.pem")),
-//     cert: fs.readFileSync(path.join(__dirname, "server.pem")),
-// };
-
 const server = http.createServer(app);
 
 //server starts
@@ -59,7 +59,7 @@ server.listen(port, () => {
     console.log(`Server has started on port ${port}`);
     console.log('reading the file data....');
 
-    //read the file
+    //read the data file
     fs.readFile('./data.json', 'utf8', (err, data) => {
         updatedData = JSON.parse(data);
         if (err) {
@@ -72,20 +72,40 @@ server.listen(port, () => {
             updatedData = fileContent ? JSON.parse(fileContent) : [];
         }
         else {
-            console.log("data: ", updatedData);
+            console.log("Task data: ", updatedData);
         }
     })
+
+    //read the user file
+    fs.readFile('./user.json', 'utf8', (err, data) => {
+        userData = JSON.parse(data);
+        if (err) {
+            // If there's an error reading the file (e.g., file doesn't exist), start with an empty array
+            userData = [];
+        } 
+        else if (data.length === 0) {
+            // If the file is empty, initialize as an empty array
+            const fileContent = data.toString().trim();
+            userData = fileContent ? JSON.parse(fileContent) : [];
+        }
+        else {
+            console.log("User data: ", userData);
+        }
+    })
+
 }).on('error', function(err){
     console.error(err);
 })
 //server ends 
 process.on('SIGINT', () => {
-    console.log('Ctrl+C was pressed. Writting any updated data to the file before exiting....');
 
-    // Convert the array back to JSON
-    updatedData = JSON.stringify(updatedData, null, 2); // null, 2 for pretty-printing
+    console.log('Writting any updated data to the files before exiting....');
 
-    // Write the updated array back to the file
+    // Convert the arrays back to JSON
+    updatedData = JSON.stringify(updatedData, null, 2);
+    userData = JSON.stringify(userData, null, 2);
+
+    // Write the updated data back to the files
     fs.writeFile('./data.json', updatedData, (writeErr) => {
         if (writeErr) {
             console.error(writeErr);
@@ -93,7 +113,17 @@ process.on('SIGINT', () => {
             return;
         }
         else{
-            console.log("Successfully written to the file. Now closing the server");
+            console.log("Successfully written to the data file.");
+        }
+    });
+    fs.writeFile('./user.json', userData, (writeErr) => {
+        if (writeErr) {
+            console.error(writeErr);
+            res.status(500).json({ error: 'Error writing file' });
+            return;
+        }
+        else{
+            console.log("Successfully written to the user file. Now closing the server....");
         }
     });
     server.close();
