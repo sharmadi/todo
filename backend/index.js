@@ -122,19 +122,18 @@ process.on('SIGINT', () => {
         else{
             console.log("Successfully written to the data file.");
         }
+
+        fs.writeFile('./user.json', userData, (writeErr) => {
+            if (writeErr) {
+                console.error(writeErr);
+                res.status(500).json({ error: 'Error writing file' });
+                return;
+            }
+            else{
+                console.log("Successfully written to the user file. Now closing the server....");
+                server.close();
+            }
+        });
     });
-    fs.writeFile('./user.json', userData, (writeErr) => {
-        if (writeErr) {
-            console.error(writeErr);
-            res.status(500).json({ error: 'Error writing file' });
-            return;
-        }
-        else{
-            console.log("Successfully written to the user file. Now closing the server....");
-        }
-    });
-    server.close();
 });
-
-
 
