@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use(cors());
 let userData = []
 let updatedData = [];
-let loginInfo;
+let loginInfo = [];
 const fs = require('fs');
 
 app.post('/createUser', (req,res) => {
@@ -20,7 +20,6 @@ app.post('/createUser', (req,res) => {
 
 app.post('/login', (req,res) => {
     loginInfo = req.body.loginInfo;
-    console.log("loginInfo:", loginInfo);
     var email = loginInfo.email;
     var password = loginInfo.password;
     //traverse through userData array
@@ -38,7 +37,7 @@ app.get('/getUserInfo', (req,res) => {
 });
 
 app.get('/getLoginInfo', (req,res) => {
-    res.json({loginInfo});
+    res.json(loginInfo);
 });
 
 app.post('/createTask', (req, res) => {

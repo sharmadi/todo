@@ -37,13 +37,18 @@
     <script>
         let taskId;
         var task;
+        var currentUserId;
+        var loginEmail;
+        var loginPassword;
+
         //add task 
-        function addTask(){        
+        function addTask(){     
             const objectTask = {
                 "task_name": document.getElementById("enterTask").value,
                 "date": document.getElementById("date").value,
                 "category": document.getElementById("selectCategory").value,
-                "id": Math.random().toString(16).slice(2)
+                "id": Math.random().toString(16).slice(2),
+                "userId": currentUserId
             }
             //send the data to server
             if(objectTask.task_name != ""){
@@ -66,6 +71,32 @@
         }
         //retrieve the tasks
         function getTask(){
+            //get Login Info
+            fetch('http://localhost:3000/getLoginInfo')
+                .then(response => response.json())
+                .then(data => {
+                    if(JSON.stringify(data) == '[]'){
+                        window.location.href = "login.html";
+                    }
+                    console.log("get loginInfo ...", data);
+                    loginEmail = data.email;
+                    loginPassword = data.password;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+            //get user Info
+            fetch('http://localhost:3000/getUserInfo')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("get userInfo ...", data);
+                    for(const key in data){
+                        if(loginEmail == data[key].email && loginPassword == data[key].password)
+                            currentUserId = data[key].userId;
+                            console.log("currentUserId: ", currentUserId);
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
             //remove div task before appending
             const divTask = document.getElementById("taskDisplay");
             divTask.textContent = '';
@@ -76,40 +107,36 @@
                     console.log("get data ...", data);
                     for(const key in data){
                         console.log(data[key]);
-                        //create div elements
-                        task = document.createElement("div");
-                        task.className = "card card-body card-style";
-                        task.id = data[key].id;
-                        var category = document.createElement("span");
-                        var date = document.createElement("span");
-                        //create cancel button
-                        var cancelTask = document.createElement("i");
-                        cancelTask.className = "fa fa-close";
-                        cancelTask.title="Cancel Task";
-                        cancelTask.onclick = function () {removeTask(data[key].id)};
-                        //populate card-body
-                        let createTask = "Task: " + data[key].task_name;
-                        let chooseCategory = data[key].category;
-                        let dateAdded = data[key].date;
-                        category.innerText = "Category: " + chooseCategory;
-                        date.innerText = "Due: " + dateAdded;
-                        task.append(cancelTask);
-                        task.append(createTask);
-                        task.append(category);
-                        task.append(date);
-                        if(createTask != "Task: "){
-                            taskDisplay.appendChild(task); 
-                        }  
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-
-            fetch('http://localhost:3000/login')
-                .then(response => response.json())
-                .then(data => {
-                    console.log("get loginInfo ...", data);
-                    if(JSON.stringify(data) == '{}'){
-                        window.location.href = "login.html";
+                        console.log("current User Id ", currentUserId);
+                        if(currentUserId == data[key].userId){
+                            //create div elements
+                            task = document.createElement("div");
+                            task.className = "card card-body card-style";
+                            task.id = data[key].id;
+                            var category = document.createElement("span");
+                            var date = document.createElement("span");
+                            //create cancel button
+                            var cancelTask = document.createElement("i");
+                            cancelTask.className = "fa fa-close";
+                            cancelTask.title="Cancel Task";
+                            cancelTask.onclick = function () {removeTask(data[key].id)};
+                            //populate card-body
+                            let createTask = "Task: " + data[key].task_name;
+                            let chooseCategory = data[key].category;
+                            let dateAdded = data[key].date;
+                            category.innerText = "Category: " + chooseCategory;
+                            date.innerText = "Due: " + dateAdded;
+                            task.append(cancelTask);
+                            task.append(createTask);
+                            task.append(category);
+                            task.append(date);
+                            if(createTask != "Task: "){
+                                taskDisplay.appendChild(task); 
+                            }
+                        }
+                        else{
+                            console.log("else if");
+                        }
                     }
                 })
                 .catch(error => console.error('Error fetching data:', error));

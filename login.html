@@ -23,6 +23,7 @@
 
     <script>
         function login(){
+            let userId; 
             const loginInfo = {
                 "email": document.getElementById("email").value,
                 "password": document.getElementById("password").value
@@ -37,7 +38,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Response: ", data);
                     if(JSON.stringify(data) != '{}'){
                         window.location.href = "index.html";
                     }
