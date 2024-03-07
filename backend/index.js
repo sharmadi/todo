@@ -129,7 +129,7 @@ process.on('SIGINT', () => {
                 res.status(500).json({ error: 'Error writing file' });
                 return;
             }
-            else{
+            else {
                 console.log("Successfully written to the user file. Now closing the server....");
                 server.close();
             }
