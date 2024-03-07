@@ -52,7 +52,7 @@
             }
             //send the data to server
             if(objectTask.task_name != ""){
-                fetch('http://localhost:3000/createTask', {
+                fetch('http://159.89.247.154/createTask', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,7 +72,7 @@
         //retrieve the tasks
         function getTask(){
             //get Login Info
-            fetch('http://localhost:3000/getLoginInfo')
+            fetch('http://159.89.247.154/getLoginInfo')
                 .then(response => response.json())
                 .then(data => {
                     if(JSON.stringify(data) == '[]'){
@@ -85,7 +85,7 @@
                 .catch(error => console.error('Error fetching data:', error));
 
             //get user Info
-            fetch('http://localhost:3000/getUserInfo')
+            fetch('http://159.89.247.154/getUserInfo')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get userInfo ...", data);
@@ -101,7 +101,7 @@
             const divTask = document.getElementById("taskDisplay");
             divTask.textContent = '';
             //retrieve data from server
-            fetch('http://localhost:3000/getTasks')
+            fetch('http://159.89.247.154/getTasks')
                 .then(response => response.json())
                 .then(data => {
                     console.log("get data ...", data);
@@ -145,7 +145,7 @@
         function removeTask(taskId){ 
             console.log("deleting", taskId);
             //remove data from server
-            fetch('http://localhost:3000/removeTasks', {
+            fetch('http://159.89.247.154/removeTasks', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
