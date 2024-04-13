@@ -13,18 +13,18 @@ const Register = ({setUser}) => {
     })
 
     const addUser = () => {
-        // let finalUser = draftUser;
-        // finalUser.userId = Math.random().toString(16).slice(2);
-        // console.log(finalUser);
-        // setUser([{finalUser}]);
-        setUser([{...draftUser, userId: Math.random().toString(16).slice(2)}]);
-        if(draftUser.email != '' && draftUser.password != ''){
+        let finalUser = draftUser;
+        finalUser.userId = Math.random().toString(16).slice(2);
+        console.log(finalUser);
+        setUser([{finalUser}]);
+        // setUser([{...draftUser, userId: Math.random().toString(16).slice(2)}]);
+        if(finalUser.email != '' && finalUser.password != ''){
             fetch(`${import.meta.env.VITE_TODO_API_URL}/createUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({objectUser: draftUser})
+                body: JSON.stringify({objectUser: finalUser})
             })
             .then(response => response.json())
             .then(data => {

@@ -7,57 +7,69 @@ const http = require("http");
 var cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors());
+let loginData = [];
 let userData = []
 let updatedData = [];
-let loginInfo = [];
 const fs = require('fs');
+
+app.post('/createLoginInfo', (req, res) => {
+    loginData = req.body.loginInfo;
+    res.json({message: "succesfully login info added"});
+});
 
 app.post('/createUser', (req,res) => {
     const userInfo = req.body.objectUser;
     userData.push(userInfo);
     res.json({message: "user successfully created"});
-})
-
-app.post('/login', (req,res) => {
-    loginInfo = req.body.loginInfo;
-    var email = loginInfo.email;
-    var password = loginInfo.password;
-    //traverse through userData array
-    for(const key in userData){
-        let userEmail = userData[key].email;
-        let userPassword = userData[key].password; 
-        if(userEmail == email && password == userPassword){
-            res.json({message:"successful login", email: email, password: password});
-        }
-    }
-});
-
-app.get('/getUserInfo', (req,res) => {
-    res.json(userData);
-});
-
-app.get('/getLoginInfo', (req,res) => {
-    res.json(loginInfo);
 });
 
 app.post('/createTask', (req, res) => {
     const task = req.body.objectTask; // assuming objectTask is a valid JSON object
     // Push the new task to the array
     updatedData.push(task);
+    console.log(updatedData);
     res.json({message: "task successfully added"});
 });
 
-app.get('/getTasks', (req, res) => {
-    // Get the existing tasks
-    res.json(updatedData);
-})
-
 app.delete('/removeTasks', (req, res) => {
     //remove task from the array
-    const cancelTaskId = req.body.id;
+    const cancelTaskId = req.body.taskId;
+    console.log("removing", cancelTaskId);
     updatedData = updatedData.filter((task) => task.id !== cancelTaskId);
+    console.log(updatedData);
     res.json({message: "task successfully removed"});
 });
+
+app.get('/getClearLoginInfo', (req, res) => {
+    loginData = [];
+    res.json(loginData);
+});
+
+app.get('/getLoginInfo', (req, res) => {
+    res.json(loginData);
+});
+
+app.get('/getUserInfo', (req,res) => {
+    res.json(userData);
+});
+
+app.get('/getTasks', (req, res) => {
+    res.json(updatedData);
+});
+
+// app.post('/login', (req,res) => {
+//     loginInfo = req.body.loginInfo;
+//     var email = loginInfo.email;
+//     var password = loginInfo.password;
+//     //traverse through userData array
+//     for(const key in userData){
+//         let userEmail = userData[key].email;
+//         let userPassword = userData[key].password; 
+//         if(userEmail == email && password == userPassword){
+//             res.json({message:"successful login", email: email, password: password});
+//         }
+//     }
+// });
 
 const server = http.createServer(app);
 
@@ -136,4 +148,3 @@ process.on('SIGINT', () => {
         });
     });
 });
-
