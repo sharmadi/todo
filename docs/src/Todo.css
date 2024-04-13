@@ -2,8 +2,33 @@ h3{
     text-align: center;
     font-weight: bolder;
     font-style: arial;
-    margin-top: 13%;
-    margin-bottom: 5%;
+    padding-bottom: 5%;
+    margin-top: 11%;
+    display: inline-block;
+}
+.taskHeader{
+    margin-left: 50%;
+}
+#task_name{
+    width: 60%;
+    margin-left: 20%;
+}
+#category{
+    width: 60%;
+    margin-left: 20%;
+}
+.createTaskHeader{
+    text-align: center;
+    margin-right: 30%;
+}
+.backtoLoginButton{
+    margin-left: 50%;
+    width: 70%;
+}
+.taskHeader h3 {
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Adjust padding as needed */
+    /* Add other styles here as needed */
 }
 .add-task{
     text-align: center;
@@ -17,8 +42,9 @@ h3{
 .card-style{
     text-align: left;
     font-style: arial;
+    margin-top: 2%;
     margin-bottom: 1%;
-    margin-left: 42.5%;
+    margin-left: 45.5%;
     width: 14%;
 }
 .card-style :hover{
@@ -39,14 +65,16 @@ h3{
 .form-select{
     margin-top: 5%;
 }
-button{
-    margin-top: 7%;
-}
+
 #date{
     margin-top: 5%;
 }
 .fa-close{
     margin-left: 90%;
+}
+
+#btnsubmit{
+    width: 30%;
 }
 
 .sidenav {
@@ -99,12 +127,30 @@ span{
  .error{
     margin-left: 5%;
  }
- #tasksTitle{
-    margin-top: 1.2%;
- }
  #errorMessage{
     margin-top: 9%;
     margin-right: 10%;
     /* margin-left: 1%; */
     color: #D8000C;
+ }
+ .fa-close{
+    color: #282727;
+ }
+ .loginButton{
+    width: 40%;
+    margin-left: 70%;
+    margin-bottom: 20%;
+ }
+ .addTaskButton{
+    margin-right: 30%;
+    margin-top: 5%;
+ }
+ .btn-lg{
+    margin-left: 80%;
+    color: green;
+ }
+ #openNav{
+    margin-left: 1%;
+    margin-top: 50%;
+    padding-top: 70%;
  }
