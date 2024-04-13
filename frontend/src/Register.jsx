@@ -19,7 +19,7 @@ const Register = ({setUser}) => {
         // setUser([{finalUser}]);
         setUser([{...draftUser, userId: Math.random().toString(16).slice(2)}]);
         if(draftUser.email != '' && draftUser.password != ''){
-            fetch('http://localhost:3000/createUser', {
+            fetch(`${import.meta.env.VITE_TODO_API_URL}/createUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

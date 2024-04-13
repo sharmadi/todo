@@ -18,7 +18,7 @@ const Login = () => {
     }
 
     const login = () => {
-        fetch('http://localhost:3000/getLoginInfo')
+        fetch(`${import.meta.env.VITE_TODO_API_URL}/getLoginInfo`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -26,7 +26,7 @@ const Login = () => {
             .catch(error => console.error('Error fetching data:', error));
 
 
-        fetch('http://localhost:3000/createLoginInfo', {
+        fetch(`${import.meta.env.VITE_TODO_API_URL}/createLoginInfo`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ const Login = () => {
                 console.error('Error:', error);
             });
 
-        fetch('http://localhost:3000/getUserInfo')
+        fetch(`${import.meta.env.VITE_TODO_API_URL}/getUserInfo`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);

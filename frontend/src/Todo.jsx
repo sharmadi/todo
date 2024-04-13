@@ -32,7 +32,7 @@ const Todo = () => {
   }, []);
 
   const login = () => {
-    fetch('http://localhost:3000/getClearLoginInfo')
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/getClearLoginInfo`)
     .then(response => response.json())
     .then(data => {
       if(JSON.stringify(data) == '[]')
@@ -41,7 +41,7 @@ const Todo = () => {
   }
 
   const loginVerf = () => {
-    fetch('http://localhost:3000/getLoginInfo')
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/getLoginInfo`)
       .then(response => response.json())
       .then(data => {
         if(JSON.stringify(data) == '[]')
@@ -52,7 +52,7 @@ const Todo = () => {
       })
     .catch(error => console.error('Error fetching data:', error));
 
-    fetch('http://localhost:3000/getUserInfo')
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/getUserInfo`)
       .then(response => response.json())
       .then(data => {
         console.log("get users info ...", data);
@@ -73,7 +73,7 @@ const Todo = () => {
     console.log(currentUserId);
     setTasks([...tasks, {...finalDraftTask}]);
     if(finalDraftTask.task_name != ""){
-      fetch('http://localhost:3000/createTask', {
+      fetch(`${import.meta.env.VITE_TODO_API_URL}/createTask`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ const Todo = () => {
   const getTask = () => {
     loginVerf();
     console.log("currentUserId:", currentUserId);
-    fetch('http://localhost:3000/getTasks')
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/getTasks`)
       .then(response => response.json())
       .then(data => {
         console.log("get data ...", data);
@@ -111,7 +111,7 @@ const Todo = () => {
   const cancelTask = (id) => {
     console.log("deleting", id);
     //remove data from server
-    fetch('http://localhost:3000/removeTasks', {
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/removeTasks`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
