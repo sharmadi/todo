@@ -99,7 +99,7 @@ const Todo = () => {
       .then(data => {
         console.log("get data ...", data);
         for(const key in data){
-          if(currentUserId == data[key].userId){
+          if(currentUserId == data[key].userId && currentUserId != null){
             taskData.push(data[key]);
           }
         }
