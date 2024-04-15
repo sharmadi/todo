@@ -6,19 +6,12 @@ const Todo = () => {
 
   const navigate = useNavigate(); 
 
-  let loginEmail = '';
-  let loginPassword = '';
-  let currentUserId = '';
-  let taskData = [];
-
 
   // an array of strings (tasks)
   const [tasks, setTasks] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
 
-
-  // latest input values
   const [draftTask, setDraftTask] = useState({
     task_name: '',
     date: '',
@@ -31,46 +24,29 @@ const Todo = () => {
     getTask();
   }, []);
 
-  const login = () => {
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/getClearLoginInfo`)
+  const logOut = () => {
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/logout`)
     .then(response => response.json())
     .then(data => {
-      if(JSON.stringify(data) == '[]')
-        navigate("/login");
+      console.log("current user id emptied.");
+      navigate("/login");
     })
   }
 
   const loginVerf = () => {
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/getLoginInfo`)
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/getCurrentUserId`)
       .then(response => response.json())
       .then(data => {
-        if(JSON.stringify(data) == '[]')
-          navigate("/login");
-        console.log("get login info ...", data);
-        loginEmail = data.email;
-        loginPassword = data.password;
+          console.log("Current user id:", data);
+          if(data == '')
+            navigate("/login");
       })
     .catch(error => console.error('Error fetching data:', error));
-
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/getUserInfo`)
-      .then(response => response.json())
-      .then(data => {
-        console.log("get users info ...", data);
-        for(const key in data){
-          if(loginEmail == data[key].email && loginPassword == data[key].password)
-            currentUserId = data[key].userId;
-        }
-        console.log("current User Id:", currentUserId);
-        draftTask.userId = currentUserId;
-        console.log(draftTask);
-      })
-      .catch(error => console.error('Error fetching data:', error));
   }
 
   const addTask = () => {   
     let finalDraftTask = draftTask;
     finalDraftTask.id = Math.random().toString(16).slice(2);
-    console.log(currentUserId);
     setTasks([...tasks, {...finalDraftTask}]);
     if(finalDraftTask.task_name != ""){
       fetch(`${import.meta.env.VITE_TODO_API_URL}/createTask`, {
@@ -93,17 +69,11 @@ const Todo = () => {
 
   const getTask = () => {
     loginVerf();
-    console.log("currentUserId:", currentUserId);
     fetch(`${import.meta.env.VITE_TODO_API_URL}/getTasks`)
       .then(response => response.json())
       .then(data => {
-        console.log("get data ...", data);
-        for(const key in data){
-          if(currentUserId == data[key].userId && currentUserId != null){
-            taskData.push(data[key]);
-          }
-        }
-        setTasks(taskData);
+        console.log(data);
+        setTasks(data);
       })
       .catch(error => console.error('Error fetching data:', error));
   }
@@ -111,7 +81,7 @@ const Todo = () => {
   const cancelTask = (id) => {
     console.log("deleting", id);
     //remove data from server
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/removeTasks`, {
+    fetch(`${import.meta.env.VITE_TODO_API_URL}/removeTask`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -171,7 +141,7 @@ const Todo = () => {
       )} 
         <span style={{fontSize: '30px', cursor: 'pointer'}} id="openNav" onClick={() => openNav()}>&#9776;</span>
         <div class="tasks">
-          <button class="btn btn-lg text-center" id="btnsubmit" onClick={() => login()} value="Submit"><h5>Logout</h5></button>
+          <button class="btn btn-lg text-center" id="btnsubmit" onClick={() => logOut()} value="Submit"><h5>Logout</h5></button>
           <div class = "taskHeader">
             <h3>Tasks</h3>
           </div>

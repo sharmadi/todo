@@ -36,7 +36,7 @@ const Register = ({setUser}) => {
         }
     }
 
-    const reDirect = () => {
+    const login = () => {
         navigate("/login");
     }
 
@@ -58,7 +58,7 @@ const Register = ({setUser}) => {
                 <div>
                     <button class="btn btn-success" id="btnsubmitLogin" onClick={() => addUser()} value="Submit">Sign Up</button>
                     <br></br>
-                    <button class="btn btn-success" id="btnsubmitSignUp" onClick={() => reDirect()} value="Submit">Sign In</button>
+                    <button class="btn btn-success" id="btnsubmitSignUp" onClick={() => login()} value="Submit">Sign In</button>
                 </div>
             </div>
     )

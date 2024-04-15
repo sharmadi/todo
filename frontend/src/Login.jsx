@@ -18,41 +18,25 @@ const Login = () => {
     }
 
     const login = () => {
-        fetch(`${import.meta.env.VITE_TODO_API_URL}/getLoginInfo`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-
-        fetch(`${import.meta.env.VITE_TODO_API_URL}/createLoginInfo`, {
+        fetch(`${import.meta.env.VITE_TODO_API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({loginInfo: draftLogin})
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
+            .then(response => {
+                console.log("response status: ", response.status);
+                if(response.status == 200){
+                    navigate("/todo");
+                }
+                else{
+                    setIsErrorMessage(true);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-
-        fetch(`${import.meta.env.VITE_TODO_API_URL}/getUserInfo`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                for(const key in data){
-                    if(draftLogin.email == data[key].email && draftLogin.password == data[key].password)
-                        navigate("/todo");
-                    else 
-                        setIsErrorMessage(true);
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
     }
 
     const handleChange = (e) => {

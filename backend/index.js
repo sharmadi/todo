@@ -10,66 +10,61 @@ app.use(cors());
 let loginData = [];
 let userData = []
 let updatedData = [];
+let currentUserId = '';
 const fs = require('fs');
 
-app.post('/createLoginInfo', (req, res) => {
+app.post('/login', (req, res) => {
     loginData = req.body.loginInfo;
-    res.json({message: "succesfully login info added"});
+    for(const key in userData){
+        if(loginData.email == userData[key].email && loginData.password == userData[key].password){
+            res.status(200).json({message: "successfully logged in."});
+            currentUserId = userData[key].userId;
+        }    
+    }
+    res.status(404).json({message: "user not found."});
 });
 
 app.post('/createUser', (req,res) => {
     const userInfo = req.body.objectUser;
     userData.push(userInfo);
-    res.json({message: "user successfully created"});
+    res.status(200).json({message: "user successfully created"});
 });
 
 app.post('/createTask', (req, res) => {
-    const task = req.body.objectTask; // assuming objectTask is a valid JSON object
-    // Push the new task to the array
+    const task = req.body.objectTask;
+    task.userId = currentUserId;
     updatedData.push(task);
     console.log(updatedData);
     res.json({message: "task successfully added"});
 });
 
-app.delete('/removeTasks', (req, res) => {
-    //remove task from the array
+app.delete('/removeTask', (req, res) => {
     const cancelTaskId = req.body.taskId;
     console.log("removing", cancelTaskId);
     updatedData = updatedData.filter((task) => task.id !== cancelTaskId);
-    console.log(updatedData);
     res.json({message: "task successfully removed"});
 });
 
-app.get('/getClearLoginInfo', (req, res) => {
-    loginData = [];
-    res.json(loginData);
+app.get('/logout', (req, res) => {
+    currentUserId = '';
+    res.json(currentUserId);
 });
 
-app.get('/getLoginInfo', (req, res) => {
-    res.json(loginData);
-});
-
-app.get('/getUserInfo', (req,res) => {
-    res.json(userData);
+app.get('/getCurrentUserId', (req, res) => {
+    res.json(currentUserId);
 });
 
 app.get('/getTasks', (req, res) => {
-    res.json(updatedData);
+    let userTaskData = [];
+    if(updatedData.length != 0){
+        for(const key in updatedData){
+            if(currentUserId == updatedData[key].userId && currentUserId != null){
+                userTaskData.push(updatedData[key]);
+            }
+        }
+    }
+    res.json(userTaskData);
 });
-
-// app.post('/login', (req,res) => {
-//     loginInfo = req.body.loginInfo;
-//     var email = loginInfo.email;
-//     var password = loginInfo.password;
-//     //traverse through userData array
-//     for(const key in userData){
-//         let userEmail = userData[key].email;
-//         let userPassword = userData[key].password; 
-//         if(userEmail == email && password == userPassword){
-//             res.json({message:"successful login", email: email, password: password});
-//         }
-//     }
-// });
 
 const server = http.createServer(app);
 
