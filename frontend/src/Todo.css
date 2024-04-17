@@ -1,34 +1,30 @@
-h3{
-    text-align: center;
-    font-weight: bolder;
-    font-style: arial;
-    padding-bottom: 5%;
-    margin-top: 11%;
-    display: inline-block;
-}
 .taskHeader{
-    margin-left: 50%;
+    margin-left: 17.3%;
+    margin-bottom: 2.5%;
+} 
+.taskHeader h3{
+    font-weight: 200;
 }
 #task_name{
-    width: 60%;
-    margin-left: 20%;
+    margin-top: 2%;
+    width: 90%;
+    margin-left: 4%;
 }
 #category{
-    width: 60%;
-    margin-left: 20%;
+    width: 90%;
+    margin-left: 4%;
 }
 .createTaskHeader{
     text-align: center;
     margin-right: 30%;
 }
+.createTaskHeader h3{
+    font-weight: 200;
+    color: black;
+}
 .backtoLoginButton{
     margin-left: 50%;
     width: 70%;
-}
-.taskHeader h3 {
-    margin: 0; /* Remove default margins */
-    padding: 0; /* Adjust padding as needed */
-    /* Add other styles here as needed */
 }
 .add-task{
     text-align: center;
@@ -42,10 +38,10 @@ h3{
 .card-style{
     text-align: left;
     font-style: arial;
-    margin-top: 2%;
+    margin-top: 4%;
     margin-bottom: 1%;
-    margin-left: 45.5%;
-    width: 14%;
+    margin-left: 43%;
+    width: 20%;
 }
 .card-style :hover{
     border: 1px solid #888;
@@ -68,70 +64,23 @@ h3{
 
 #date{
     margin-top: 5%;
+    width: 90%;
 }
 .fa-close{
     margin-left: 90%;
 }
 
 #btnsubmit{
-    width: 30%;
+    width: 8%;
+    margin-right: 44%;
+    margin-top: 1.5%;
 }
 
-.sidenav {
-    height: 100%;
-    width: 25%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    -moz-box-shadow: -3px 0 5px 0 #555;
-    -webkit-box-shadow: -3px 0 5px 0 #555;
-    box-shadow: -3px 0 5px 0 #282727;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-  }
-  
-  .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-  }
-  
-  .sidenav a:hover {
-    color: #f1f1f1;
-  }
-  
-  .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
-  
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
-
-span{
-    margin-top: 5%;
- }
  p{
     margin-left: 60%
  }
  .error{
     margin-left: 5%;
- }
- #errorMessage{
-    margin-top: 9%;
-    margin-right: 10%;
-    /* margin-left: 1%; */
-    color: #D8000C;
  }
  .fa-close{
     color: #282727;
@@ -149,8 +98,61 @@ span{
     margin-left: 80%;
     color: green;
  }
- #openNav{
-    margin-left: 1%;
-    margin-top: 50%;
-    padding-top: 70%;
- }
+
+ #addTaskButton{
+    width: 3%;
+    text-align: center;
+    margin-left: 50%;
+ } 
+  #popup h1 {
+    text-align: center;
+  }
+  
+  #popup p {
+    margin: 0 auto;
+    width: 50%;
+  }
+  
+  #popup button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  #addTaskPopUp{
+    margin-top: 1%;
+    margin-left: 52%;
+    width: 2.5%;
+    height: 2.5%;
+    border-radius: 50%;
+  } 
+
+.taskBody{
+    margin-right: 4%;
+}
+#taskClose{
+    margin-left: 97%;
+}
+#taskName{
+    font-size: 23px;
+    font-weight: 500;
+    text-align: center;
+}
+#popup{
+    margin-top: 8%;
+    border: 1px solid #9d9898;    
+    background-color: rgb(249, 249, 249);
+    width: 22%;
+    height: 45%;
+    margin-left: 40%;
+    position: fixed;
+    z-index: 100;
+}
+#btnsubmitTask{
+    margin-top: 88%;
+    margin-right: 5%;
+    width: 84%;
+}
+.container{
+    margin-top: 2.6%;
+}

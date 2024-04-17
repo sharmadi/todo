@@ -63,6 +63,7 @@ app.get('/getTasks', (req, res) => {
             }
         }
     }
+    userTaskData.reverse();
     res.json(userTaskData);
 });
 

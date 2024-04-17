@@ -45,7 +45,7 @@ const Login = () => {
 
     return (
         <>
-        <div class = "container">
+        <div class = "container" id = "loginBody">
             <h3 id = "loginHeader">Login</h3>
             { isErrorMessage && (
             <div class = "errorMessage">

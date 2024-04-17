@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Popup from 'reactjs-popup';
 import './Todo.css'
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +11,7 @@ const Todo = () => {
   // an array of strings (tasks)
   const [tasks, setTasks] = useState([]);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [draftTask, setDraftTask] = useState({
     task_name: '',
@@ -23,6 +24,15 @@ const Todo = () => {
   useEffect(() => {
     getTask();
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.querySelector('.tasks').style.opacity = 0.3;
+    } else {
+      document.querySelector('.tasks').style.opacity = 1;
+    }
+  }, [open]);
+
 
   const logOut = () => {
     fetch(`${import.meta.env.VITE_TODO_API_URL}/logout`)
@@ -80,7 +90,6 @@ const Todo = () => {
 
   const cancelTask = (id) => {
     console.log("deleting", id);
-    //remove data from server
     fetch(`${import.meta.env.VITE_TODO_API_URL}/removeTask`, {
       method: 'DELETE',
       headers: {
@@ -96,12 +105,8 @@ const Todo = () => {
       .catch(error =>  console.error('Error:', error));
   }
 
-  const openNav = () => {
-    setIsOpen(true);
-  }
-
-  const closeNav = () => {
-    setIsOpen(false);
+  const closePopUp = () => {
+    setOpen(false);
   }
 
   // handles what is typed
@@ -111,13 +116,14 @@ const Todo = () => {
 
   return (
     <>
-      {isOpen && (
-          <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onClick={() => closeNav()}>&times;</a>
+      {open && (
+        <>
+          <div id="popup">
             <div class="container text-center">
-            <div class = "createTaskHeader">
-              <h3>Create Task</h3>
-            </div>
+            <i class="fa fa-close" id = "closeModal" onClick={() => closePopUp()}></i>
+              <div class="createTaskHeader">
+                <h3>Create Task</h3>
+              </div>
               <br></br>
               <input type="text" name="task_name" id="task_name" onfocus="this.value=''" value={draftTask.task_name} onChange={handleChange} class="form-control rounded" placeholder="Enter Your Task" aria-label="Add Task" aria-describedby="search-addon" required></input>
               <br></br>
@@ -128,39 +134,35 @@ const Todo = () => {
                 <option value="School">School</option>
               </select>
               <br></br>
-              <label for="date">Due Date:</label>
-              {" "}
+              {' '}
               <input type="date" name="date" id="date" onfocus="this.value=''" value={draftTask.date} onChange={handleChange} placeholder="Enter Due Date"></input>
-              <br></br>
-              <br></br>
-              <div class = "addTaskButton">
-                <button class="btn btn-success" id="btnsubmit" onClick={() => addTask()} value="Submit" title="Add Task">Add Task</button>
-              </div>
+              <button class="btn btn-success" id="btnsubmitTask" onClick={() => addTask()} value="Submit" title="Add Task">Submit</button>
             </div>
           </div>
-      )} 
-        <span style={{fontSize: '30px', cursor: 'pointer'}} id="openNav" onClick={() => openNav()}>&#9776;</span>
-        <div class="tasks">
-          <button class="btn btn-lg text-center" id="btnsubmit" onClick={() => logOut()} value="Submit"><h5>Logout</h5></button>
-          <div class = "taskHeader">
-            <h3>Tasks</h3>
+        </>
+      )}
+        <div className="tasks">
+            <button class="btn btn-lg text-center" id="btnsubmit" onClick={() => logOut()} value="Submit"><h5>Logout</h5></button>
+          <div class = "taskBody">
+            <div class="taskHeader">
+              <h3>My Tasks</h3>
+            </div>
+            <button onClick={() => setOpen(!open)} type="button" id="addTaskPopUp" className="btn btn-success" data-toggle="modal">+</button>
+            {tasks.reverse().map((task) => (
+              <>
+                <div className="card card-body card-style">
+                  <i class="fa fa-close" id="taskClose" onClick={() => cancelTask(task.id)}></i>
+                  <span id = "taskName">{task.task_name}</span>
+                  <br></br>
+                  <span id = "taskDate">{task.date}</span>
+                  <br></br>
+                  <span id = "taskCategory">{task.category}</span>
+                </div>
+              </>
+            ))}
           </div>
-            {
-              tasks.map((task) => (
-                <>
-                  <div className="card card-body card-style">
-                    <i class="fa fa-close" onClick={() => cancelTask(task.id)}></i>
-                    <span>Task Name: {task.task_name}</span>
-                    <br></br>
-                    <span>Due: {task.date}</span>
-                    <br></br>
-                    <span>Category: {task.category}</span>
-                  </div>
-                </>
-              ))
-            }
         </div>
-    </>
+        </>
   )
 }
 
