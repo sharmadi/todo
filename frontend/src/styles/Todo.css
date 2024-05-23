@@ -36,23 +36,15 @@
     margin-top: 5%;
 }
 .card-style{
+    background-color: #f8f7f7;
     text-align: left;
     font-style: arial;
     margin-top: 4%;
     margin-bottom: 1%;
     margin-left: 43%;
+    padding: 25px;
     width: 20%;
-}
-.card-style :hover{
-    border: 1px solid #888;
-    background-color: #ddd;
-}
-.close-icon{
-    margin-left: 95%;
-}
-.close-icon :hover{
-    border: 1px solid #888;
-    background-color: black
+    height: 35%;
 }
 #taskDisplay{
     margin-top: 2%;
@@ -66,9 +58,6 @@
     margin-top: 5%;
     width: 90%;
 }
-.fa-close{
-    margin-left: 90%;
-}
 
 #btnsubmit{
     width: 8%;
@@ -81,9 +70,6 @@
  }
  .error{
     margin-left: 5%;
- }
- .fa-close{
-    color: #282727;
  }
  .loginButton{
     width: 40%;
@@ -130,13 +116,25 @@
 .taskBody{
     margin-right: 4%;
 }
+
+#closeModal{
+    margin-left: 80%;
+}
+
 #taskClose{
-    margin-left: 97%;
+    color: gray;
+    margin-left: 70%
 }
 #taskName{
     font-size: 23px;
     font-weight: 500;
     text-align: center;
+}
+#taskDate{
+    color: gray;
+}
+#taskCategory{
+    color: gray;
 }
 #popup{
     margin-top: 8%;
@@ -149,7 +147,7 @@
     z-index: 100;
 }
 #btnsubmitTask{
-    margin-top: 88%;
+    margin-top: 80%;
     margin-right: 5%;
     width: 84%;
 }

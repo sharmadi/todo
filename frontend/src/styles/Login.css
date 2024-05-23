@@ -23,7 +23,8 @@ button{
 .errorMessage{
     color: red;
     /* margin-top: 1%; */
-    margin-right: 29.4%;
+    margin-right: 31%;
+    margin-top: 3%;
 }
 #loginBody{
     margin-top: 10%;

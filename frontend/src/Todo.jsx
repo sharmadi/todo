@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import Popup from 'reactjs-popup';
-import './Todo.css'
-import { useNavigate } from "react-router-dom";
+import './styles/Todo.css'
+import { Auth } from "./api/auth";
+import { Tasks } from "./api/task";
 
 const Todo = () => {
-
-  const navigate = useNavigate(); 
-
-
   // an array of strings (tasks)
   const [tasks, setTasks] = useState([]);
 
   const [open, setOpen] = useState(false);
+
+  const { logOut } = Auth();
+
+  const { addTask, getTask, cancelTask } = Tasks();
 
   const [draftTask, setDraftTask] = useState({
     task_name: '',
@@ -22,7 +22,7 @@ const Todo = () => {
   });
 
   useEffect(() => {
-    getTask();
+    getTask(setTasks);
   }, []);
 
   useEffect(() => {
@@ -33,80 +33,16 @@ const Todo = () => {
     }
   }, [open]);
 
-
-  const logOut = () => {
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/logout`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("current user id emptied.");
-      navigate("/login");
-    })
-  }
-
-  const loginVerf = () => {
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/getCurrentUserId`)
-      .then(response => response.json())
-      .then(data => {
-          console.log("Current user id:", data);
-          if(data == '')
-            navigate("/login");
-      })
-    .catch(error => console.error('Error fetching data:', error));
-  }
-
-  const addTask = () => {   
-    let finalDraftTask = draftTask;
-    finalDraftTask.id = Math.random().toString(16).slice(2);
-    setTasks([...tasks, {...finalDraftTask}]);
-    if(finalDraftTask.task_name != ""){
-      fetch(`${import.meta.env.VITE_TODO_API_URL}/createTask`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({objectTask: finalDraftTask})
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response: ", data);
-        getTask();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    }
-  }
-
-  const getTask = () => {
-    loginVerf();
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/getTasks`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setTasks(data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  }
-
-  const cancelTask = (id) => {
-    console.log("deleting", id);
-    fetch(`${import.meta.env.VITE_TODO_API_URL}/removeTask`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({taskId: id})
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response: ", data);
-        getTask();
-      })
-      .catch(error =>  console.error('Error:', error));
-  }
-
   const closePopUp = () => {
     setOpen(false);
+  }
+
+  const createTask = () => {
+    let finalDraftTask = draftTask;
+    finalDraftTask.id = Math.random().toString(16).slice(2);
+    setOpen(false);
+    setTasks([...tasks, {...finalDraftTask}]);
+    addTask(finalDraftTask, setTasks)
   }
 
   // handles what is typed
@@ -136,7 +72,7 @@ const Todo = () => {
               <br></br>
               {' '}
               <input type="date" name="date" id="date" onfocus="this.value=''" value={draftTask.date} onChange={handleChange} placeholder="Enter Due Date"></input>
-              <button class="btn btn-success" id="btnsubmitTask" onClick={() => addTask()} value="Submit" title="Add Task">Submit</button>
+              <button class="btn btn-success" id="btnsubmitTask" onClick={() => createTask()} value="Submit" title="Add Task">Submit</button>
             </div>
           </div>
         </>
@@ -148,15 +84,16 @@ const Todo = () => {
               <h3>My Tasks</h3>
             </div>
             <button onClick={() => setOpen(!open)} type="button" id="addTaskPopUp" className="btn btn-success" data-toggle="modal">+</button>
-            {tasks.reverse().map((task) => (
+            {tasks.reverse().map((task) => task.task_name && (
               <>
-                <div className="card card-body card-style">
-                  <i class="fa fa-close" id="taskClose" onClick={() => cancelTask(task.id)}></i>
+                <div className="card border-light card-style">
+                  <div style = {{display: "inline-flex"}}>
+                    <span id = "taskCategory">{task.category}</span>
+                    <i class="fa fa-close" id="taskClose" onClick={() => cancelTask(task.id, setTasks)}></i>
+                  </div>
                   <span id = "taskName">{task.task_name}</span>
                   <br></br>
-                  <span id = "taskDate">{task.date}</span>
-                  <br></br>
-                  <span id = "taskCategory">{task.category}</span>
+                  <span id = "taskDate">{task.date ? new Date(task.date).toDateString() : ""}</span>
                 </div>
               </>
             ))}
